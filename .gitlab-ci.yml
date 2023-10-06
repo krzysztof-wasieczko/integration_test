@@ -1,0 +1,6 @@
+Test1:
+    image: registry.openshift.datto.net/agents/fedora-libagent-test:latest
+    tags:
+        - docker-throttled
+    script:
+        - echo "PIPELINE HAS STARTED!"
