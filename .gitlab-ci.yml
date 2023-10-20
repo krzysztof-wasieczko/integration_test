@@ -10,6 +10,7 @@ variables:
   CI_COMMIT_TAG: "0.11.3"
 
 before_script:
+  - export
   - cd ..
   - git clone https://github.com/datto/dattobd.git --recursive
   - tar -c -z --exclude-vcs -v -f ${CI_PROJECT_NAME}.tar.gz dattobd; cd $CI_PROJECT_NAME
