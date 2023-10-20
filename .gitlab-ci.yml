@@ -1,6 +1,43 @@
-Test1:
-    image: registry.openshift.datto.net/agents/fedora-libagent-test:latest
-    tags:
-        - docker-throttled
+stages:
+    - obs
+    
+image: registry.openshift.datto.net/devops/centos-obs-scratch:latest
+
+variables:
+  OBS_PROJECT: "home:krzysztof.wasieczko"
+  OBS_PACKAGE: "dattobd"
+  OBS_TARGET_DISTRO: "null"
+  CI_COMMIT_TAG: "0.11.3"
+
+before_script:
+  - cd ..
+  - git clone https://github.com/datto/dattobd.git --recursive
+  - tar -c -z --exclude-vcs -v -f ${CI_PROJECT_NAME}.tar.gz dattobd; cd $CI_PROJECT_NAME
+  - export PARENT_VERSION=$(rpmspec -q --srpm --qf '%{version}' dist/${CI_PROJECT_NAME}.spec)
+
+obsscratch_18_04:
+    stage: obs
+    variables:
+        OBS_TARGET_DISTRO: "xUbuntu_18.04"
     script:
-        - echo "PIPELINE HAS STARTED!"
+        - obsctl scratchbuild -f ../dattobd.tar.gz -o $CI_PROJECT_NAMESPACE -n $CI_PROJECT_NAME -t $PARENT_VERSION -R $CI_COMMIT_SHA -B $CI_COMMIT_REF_NAME -s $OBS_PROJECT -p $OBS_PACKAGE -T git -d $OBS_TARGET_DISTRO -im
+        - cp -a scratchbuild-*/home/abuild/debbuild/DEBS/*/*.deb .
+    artifacts:
+        when: on_success
+        paths:
+            - ${SOURCE_NAME}*.deb
+    only:
+        - branches
+    tags:
+        - docker
+
+obsrelease:
+  stage: obs
+  needs: ["obsscratch_18_04"]
+  tags:
+    - docker
+  script:
+    - echo "TEST HAS STARTED"
+    - obsctl tarimport -f ../dattobd.tar.gz -o $CI_PROJECT_NAMESPACE -n $CI_PROJECT_NAME -t $CI_COMMIT_TAG -R $CI_COMMIT_SHA -B $CI_COMMIT_REF_NAME -s $OBS_PROJECT -p $OBS_PACKAGE -T git -i
+  only:
+    - branches
