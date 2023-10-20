@@ -12,6 +12,7 @@ variables:
 before_script:
   - export
   - cd ..
+  - ls; ls dattobd/
   - git clone https://github.com/datto/dattobd.git --recursive
   - tar -c -z --exclude-vcs -v -f ${CI_PROJECT_NAME}.tar.gz dattobd; cd $CI_PROJECT_NAME
   - export PARENT_VERSION=$(rpmspec -q --srpm --qf '%{version}' dist/${CI_PROJECT_NAME}.spec)
@@ -22,7 +23,7 @@ obsscratch_18_04:
         OBS_TARGET_DISTRO: "xUbuntu_18.04"
     script:
         - export
-        - obsctl scratchbuild -f ../${CI_PROJECT_NAME}.gz -o $CI_PROJECT_NAMESPACE -n $CI_PROJECT_NAME -t $PARENT_VERSION -R 7f400ee87c449b90d665ef730abf346475749f66 -B $CI_COMMIT_REF_NAME -s $OBS_PROJECT -p $OBS_PACKAGE -T git -d $OBS_TARGET_DISTRO -im
+        - obsctl scratchbuild -f ../${CI_PROJECT_NAME}.gz -o $CI_PROJECT_NAMESPACE -n $CI_PROJECT_NAME -t $PARENT_VERSION -R c33aa515be8d2938831997025a485cf581ad4662 -B $CI_COMMIT_REF_NAME -s $OBS_PROJECT -p $OBS_PACKAGE -T git -d $OBS_TARGET_DISTRO -im
         - cp -a scratchbuild-*/home/abuild/debbuild/DEBS/*/*.deb .
     artifacts:
         when: on_success
