@@ -23,7 +23,7 @@ obsscratch_18_04:
         OBS_TARGET_DISTRO: "xUbuntu_18.04"
     script:
         - export
-        - obsctl scratchbuild -f ../${CI_PROJECT_NAME}.gz -o $CI_PROJECT_NAMESPACE -n $CI_PROJECT_NAME -t $PARENT_VERSION -R c33aa515be8d2938831997025a485cf581ad4662 -B $CI_COMMIT_REF_NAME -s $OBS_PROJECT -p $OBS_PACKAGE -T git -d $OBS_TARGET_DISTRO -im
+        - obsctl scratchbuild -f ../${CI_PROJECT_NAME}.gz -o $CI_PROJECT_NAMESPACE -n $CI_PROJECT_NAME -t $PARENT_VERSION -R 241b274392f20959a4f332b336d839f2efea7513 -B $CI_COMMIT_REF_NAME -s $OBS_PROJECT -p $OBS_PACKAGE -T git -d $OBS_TARGET_DISTRO -im
         - cp -a scratchbuild-*/home/abuild/debbuild/DEBS/*/*.deb .
     artifacts:
         when: on_success
