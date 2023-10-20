@@ -12,7 +12,8 @@ variables:
 before_script:
   - export
   - cd ..
-  - ls; ls dattobd/
+  - ls
+  - ls dattobd/
   - git clone https://github.com/datto/dattobd.git --recursive
   - tar -c -z --exclude-vcs -v -f ${CI_PROJECT_NAME}.tar.gz dattobd; cd $CI_PROJECT_NAME
   - export PARENT_VERSION=$(rpmspec -q --srpm --qf '%{version}' dist/${CI_PROJECT_NAME}.spec)
