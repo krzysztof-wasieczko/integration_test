@@ -11,7 +11,6 @@ before_script:
   - export PARENT_VERSION=$(rpmspec -q --srpm --qf '%{version}' dist/${CI_PROJECT_NAME}.spec)
 
 obsscratch_18_04:
-    stage: obs
     variables:
         OBS_TARGET_DISTRO: "xUbuntu_18.04"
     script:
@@ -30,7 +29,6 @@ obsscratch_18_04:
         - docker
 
 obsrelease:
-  stage: obs
   needs: ["obsscratch_18_04"]
   tags:
     - docker
